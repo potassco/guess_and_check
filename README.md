@@ -58,9 +58,9 @@ holds(a(X)) :- a(X).
 #external prev(a(X)) : dom(X).
 ```
 
-* Execution (all models projecting on b/1):
+* Execution (all models, projecting on b/1, no optimization):
 ```bash
-$ clingo multiclingo.py diverse.lp -c models=0 -c project=1 --heuristic=Domain
+$ clingo multiclingo.py diverse.lp -c models=0 -c project=1 -c minimize=0 --heuristic=Domain
 clingo version 5.3.0
 Reading from multiclingo.py ...
 Solving...
@@ -72,7 +72,7 @@ Call: 2
 Answer: 1
 a(3) a(4) b(1)
 Solving...
-UNSATISFIABLE
+UNSATISFIAB:!LE
 
 Models       : 2
 Calls        : 3
@@ -81,9 +81,9 @@ CPU Time     : 0.016s
 
 ```
 
-* Execution (2 optimal models):
+* Execution (2 models, no projection, optimization):
 ```bash
-$ clingo multiclingo.py diverse.lp -c models=2 -c minimize=1 --heuristic=Domain
+$ clingo multiclingo.py diverse.lp -c models=2 -c project=0 -c minimize=1 --heuristic=Domain
 clingo version 5.3.0
 Reading from multiclingo.py ...
 Solving...

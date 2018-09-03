@@ -13,7 +13,8 @@ Given an input program `P`, it computes stable models as follows:
 ## Options
 
 * Option `-c models=n` sets to `n` the number of stable models to be computed 
-  (use `0` to computing all stable models until `UNSATISFIABLE` is returned).
+  (use `0` to computing all stable models until `UNSATISFIABLE` is returned,
+  clingo option ``--models`` should not be used).
 * Option `-c project=1` activates projection (clingo option `--project` has no effect).
 
 ## Syntax

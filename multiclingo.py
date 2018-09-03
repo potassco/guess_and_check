@@ -85,7 +85,6 @@ class Controller:
         # set result and print call number
         self.result = SATISFIABLE
         print("Call: {}".format(self.calls))
-        # if optimization:
         # set last_prev, prev, model and cost
         self.last_prev = self.prev
         self.prev = [
@@ -118,7 +117,7 @@ class Controller:
             # just in case:
             if len(self.cost) != len(self.minimization):
                 raise Exception("ERROR (multiclingo): implementation error")
-            # iterate over levels
+            # iterate over levels adding a weight constraint
             for idx, cost in enumerate(self.cost):
                 level = self.minimization[idx]
                 self.backend.add_weight_rule([], cost+1, level, False)

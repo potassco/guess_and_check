@@ -15,13 +15,13 @@ dom(1..5).
 % multi part
 %
 
-% holds/1 definition
-holds(a(X)) :- a(X).
-
 % heuristics using prev
 #heuristic a(X) :     prev(a(X)),         not first. [-1,sign]
 #heuristic a(X) : not prev(a(X)), dom(X), not first. [ 1,sign]
 
+% holds/1 definition
+holds(a(X)) :- a(X).
+
 % externals
-#external prev(a(X)) : dom(X).
 #external first.
+#external prev(a(X)) : dom(X).

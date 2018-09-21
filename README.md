@@ -1,26 +1,13 @@
-# multiclingo
-A simple approach to multi-shot solving with clingo
+# guess_and_check
+An implementation of Guess and Check Answer Set Programming in clingo.
 
 
 ## Description
-`multiclingo` solves multiple times a logic program.
-Given an input program `P`, it computes stable models as follows:
-* In step `0`, it computes a stable model `M(1)` of `P` together with fact `first.`.
-* In step `n`, for `n>0`, let `P(n)` be the program `P` together with facts `prev(x).` 
-  for every `x` such that `holds(x)` was in `M(n-1)`. Then, it computes a stable model `M(n)`
-  of `P(n)` that is different to all `M(m)` for `m<n` if it exists, else it returns `UNSATISFIABLE`.
 
 ## Options
 
-* Option `-c models=n` sets to `n` the number of stable models to be computed 
-  (use `0` to computing all stable models until `UNSATISFIABLE` is returned,
-  clingo option ``--models`` should not be used).
-* Option `-c project=1` activates projection (clingo option `--project` has no effect).
 
 ## Syntax
-The program must define some externals:
-* external `first` to represent the first step
-* externals `prev(x)` for each atom `holds(x)` that appears in `P`
 
 ## Example: enumerating diverse stable models
 

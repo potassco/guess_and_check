@@ -28,8 +28,8 @@
 #
 
 import clingo
-import metasp_programs
-import reify
+import src.metasp_programs as metasp_programs
+import src.reify as reify
 import sys
 import re
 

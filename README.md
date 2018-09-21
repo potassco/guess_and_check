@@ -195,7 +195,6 @@ occurs(A,T) :- holds(occurs(A,T)).
 :- not fail.
 
 $ gc.py examples/conformant/{example2.lp,example2_guess.lp,holds.lp} -C examples/conformant/{example2.lp,example2_check.lp} --binary
-Solving...
 Answer 1:
 occurs(cpa_go_down(cpa_e0,cpa_f1,cpa_f0),1) occurs(cpa_step_in(cpa_e0,cpa_f0,cpa_p0),2) occurs(cpa_go_up(cpa_e0,cpa_f0,cpa_f1),3) occurs(cpa_step_out(cpa_e0,cpa_f1,cpa_p0),4) occurs(cpa_collect(cpa_c0,cpa_f1,cpa_p0),5) occurs(cpa_collect(cpa_c1,cpa_f1,cpa_p0),6) occurs(cpa_move_right(cpa_f1,cpa_p0,cpa_p1),7) occurs(cpa_collect(cpa_c0,cpa_f1,cpa_p1),8) occurs(cpa_collect(cpa_c1,cpa_f1,cpa_p1),9)
 SAT

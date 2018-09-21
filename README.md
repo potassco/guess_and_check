@@ -67,7 +67,7 @@ a(1) a(2) a(3)
 SAT
 ```
 
-## Preferences:
+### Preferences:
 
 In this example we compute subset (or superset) 
 optimal answer sets of program `a.lp`.
@@ -110,7 +110,7 @@ a(1) a(2) a(3)
 SAT
 ```
 
-## Tic-Tac-Toe Game:
+### Tic-Tac-Toe Game:
 In this example there is a 3x3 Tic Tac Toe square. 
 Player O has to place her 3 tokens in a winning position
 such that afterwards player X cannot place her tokens in a winning position.
@@ -149,7 +149,7 @@ o(1,1) o(2,2) o(3,3)
 SAT
 ```
 
-## Conformant planning:
+### Conformant planning:
 
 Conformant planning can be represented in `QBF` style as:
   

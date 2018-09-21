@@ -17,8 +17,6 @@ It uses the meta-programming techniques introduced in:
 *	Martin Gebser, Roland Kaminski, Torsten Schaub: Complex optimization in answer set programming. TPLP 11(4-5): 821-839 (2011).
 
 
-## Options
-
 ## Usage
 
 ```

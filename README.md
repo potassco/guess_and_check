@@ -178,7 +178,7 @@ and fact `fail` holds iff `S` does not achieve the goal starting from `I`.
 ```bash
 $ cat examples/conformant/example2_guess.lp
 %%% generate holds atoms for the check part
-_holds(occurs(A,T)) :- occurs(A,T).
+holds(occurs(A,T)) :- occurs(A,T).
 
 %%% The plan cannot fail
 :- fail.

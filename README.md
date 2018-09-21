@@ -184,7 +184,7 @@ holds(occurs(A,T)) :- occurs(A,T).
 
 
 $ cat examples/conformant/example2_check.lp
-%%% translate _holds atoms from guess part
+%%% translate holds atoms from guess part
 occurs(A,T) :- holds(occurs(A,T)).
 
 %%% the plan has to fail

@@ -151,30 +151,34 @@ SAT
 
 ## Conformant planning:
 
-Conformant planning can be represented in QBF style as:
-  \exists an initial situation I, and a sequence of actions S that achieve the goal starting from I, such that
-  \forall initial situations I', S achieves the goal starting from I'
+Conformant planning can be represented in `QBF` style as:
+  
+* There exists an initial situation `I`, and a sequence of actions `S` that achieve the goal starting from `I`, such that
+  for all initial situations `I'`, `S` achieves the goal starting from `I'`
+
 which is equivalent to:
-  \exists an initial situation I, and a sequence of actions S that achieve the goal starting from I, such that
-  \not \exists I', such that S does not achieve the goal starting from I'
-In our approach the Base represents the first \exists part:
-  Find an initial situation I, and a sequence of actions S that achieve the goal starting from I
-and the Tester represents the second \exists part:
-  Find an initial situation I', such that S (given by the Base) does not achieve the goal starting from I'
+  
+* There exists an initial situation `I`, and a sequence of actions `S` that achieve the goal starting from `I`, such that
+  there is no `I'` such that `S` does not achieve the goal starting from `I'`.
+
+In our approach the guess program represents the first exists part:
+
+* Find an initial situation `I`, and a sequence of actions `S` that achieve the goal starting from `I`
+
+and the check program represents the second part:
+
+* Find an initial situation `I'`, such that `S` (given by the guess program) does not achieve the goal starting from `I'`.
 
 
-In this example we adapt the conformant planning problem of gringo in: 
-  gringo/examples/reify/example2.lp
-The file generates all initial situation I and all sequences of actions S, 
-and fact 'fail' holds iff S does not achieve the goal starting from I.
-
-In the Base, we search for an initial situation, and a plan for that situation.
-For this, we add to example2.lp the file example2-np.lp:
+In this example we adapt the conformant planning problem of clingo in
+  [clingo/examples/reify/example2.lp](https://github.com/potassco/clingo/blob/master/examples/reify/example2.lp).
+The file generates all initial situations `I` and all sequences of actions `S`, 
+and fact `fail` holds iff `S` does not achieve the goal starting from `I`.
 
 ```bash
 $ cat examples/conformant/example2_guess.lp
 %%% generate holds atoms for the check part
-_holds(occurs(A,T)) :- occurs(A,T).
+holds(occurs(A,T)) :- occurs(A,T).
 
 %%% The plan cannot fail
 :- fail.
@@ -184,7 +188,7 @@ holds(occurs(A,T)) :- occurs(A,T).
 
 
 $ cat examples/conformant/example2_check.lp
-%%% translate _holds atoms from guess part
+%%% translate holds atoms from guess part
 occurs(A,T) :- holds(occurs(A,T)).
 
 %%% the plan has to fail

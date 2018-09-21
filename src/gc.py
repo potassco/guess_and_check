@@ -41,7 +41,7 @@ import re
 STATE_G = 0
 STATE_C = 1
 HELP = """\
-usage: gc.py [number] [options] [guess_files] -C [check_files]
+usage: gc.py [--binary] [number] [options] [guess_files] -C [check_files]
 """
 ANSWER = """\
 Answer {}:

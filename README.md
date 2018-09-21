@@ -18,18 +18,18 @@ It uses the meta-programming techniques introduced in:
 
 
 ## Options
-* Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program. 
-  By default, the reification is performed using the Python API of clingo.
 
 ## Usage
 
 ```
 $ src/gc.py --help
-usage: gc.py [number] [options] [guess_files] -C [check_files]
+usage: gc.py [--binary] [number] [options] [guess_files] -C [check_files]
 ```
 
-The `number` and the `options` are passed to `clingo`, 
+* The `number` and the `options` are passed to `clingo`, 
 `guess_files` define `G`, and the `check_files` define `C`. 
+* Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program. 
+  By default, the reification is performed using the Python API of clingo.
 
 Predicate `holds/1` should not appear in any head of `C`.
 

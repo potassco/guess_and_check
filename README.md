@@ -35,10 +35,10 @@ The script requires `clingo` Python library. It has been tested with `clingo` ve
 
 ## Examples:
 
-* Basic case:
-In this example the check program is always unsatisfiable,
-so all stable models of the guess program are 
-stable models of the guess and check program.
+### Basic case:
+In this example the check program is always unsatisfiable.
+Hence, all the stable models of the guess program are 
+also stable models of the guess and check program.
 ```bash
 $ cat examples/basic/a.lp
 1 { a(1..3) }.  #show a/1.
@@ -67,7 +67,7 @@ a(1) a(2) a(3)
 SAT
 ```
 
-* Preferences:
+## Preferences:
 
 In this example we compute subset (or superset) 
 optimal answer sets of program `a.lp`.
@@ -110,9 +110,9 @@ a(1) a(2) a(3)
 SAT
 ```
 
-* Tic-Tac-Toe Game:
+## Tic-Tac-Toe Game:
 In this example there is a 3x3 Tic Tac Toe square. 
-Player O has to place its 3 tokens in a winning position
+Player O has to place her 3 tokens in a winning position
 such that afterwards player X cannot place her tokens in a winning position.
 
 ```bash
@@ -149,7 +149,7 @@ o(1,1) o(2,2) o(3,3)
 SAT
 ```
 
-* Conformant planning:
+## Conformant planning:
 
 Conformant planning can be represented in QBF style as:
   \exists an initial situation I, and a sequence of actions S that achieve the goal starting from I, such that

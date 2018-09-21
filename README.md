@@ -1,4 +1,4 @@
-# Guess and Check Anser Set Programming
+# Guess and Check Answer Set Programming
 An implementation of Guess and Check Answer Set Programming in clingo.
 
 The Guess and Check method was introduced by T. Eiter and A. Polleres in:

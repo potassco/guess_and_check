@@ -1,96 +1,48 @@
-# guess_and_check
+# Guess and Check Anser Set Programming
 An implementation of Guess and Check Answer Set Programming in clingo.
 
+The Guess and Check method was introduced by T. Eiter and A. Polleres in:
+* Thomas Eiter, Axel Polleres: 
+Towards automated integration of guess and check programs in answer set programming: a meta-interpreter and applications. TPLP 6(1-2): 23-60 (2006).
 
 ## Description
+A Guess and Check program is a pair of logic programs `<G,C>`.
+A set of atoms `X` is a stable model of `<G,C>` if `X` is a stable model of `G`, 
+and `C` together with `H` is unsatisfiable, 
+where `H` contains the facts `holds(x).` for all atoms of the form `holds(x)` in `X`.
+
+The implementation translates a Guess and Check program into a disjunctive logic program, 
+that is solved by clingo. 
+It uses the meta-programming techniques introduced in:
+*	Martin Gebser, Roland Kaminski, Torsten Schaub: Complex optimization in answer set programming. TPLP 11(4-5): 821-839 (2011).
+
 
 ## Options
+* Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program. 
+  By default, the reification is performed using the Python API of clingo.
 
+## Usage
 
-## Syntax
-
-## Example: enumerating diverse stable models
-
-* Program `diverse.lp`:
-```bash
-%
-% base part
-%
-
-dom(1..4).
-2 { a(X) : dom(X) }.
-#show a/1.
-
-{ b(1) }.
-#show b/1.
-#project b/1.
-
-#minimize{
-  1@1,X: a(X), minimize=1;
-  1@2,X: b(X), minimize=1
-}.
-
-%
-% multi part
-%
-
-% heuristics using prev
-#heuristic a(X) :     prev(a(X)),         not first. [1,false]
-#heuristic a(X) : not prev(a(X)), dom(X), not first. [1, true]
-
-% holds/1 definition
-holds(a(X)) :- a(X).
-
-% externals
-#external first.
-#external prev(a(X)) : dom(X).
+```
+$ src/gc.py --help
+usage: gc.py [number] [options] [guess_files] -C [check_files]
 ```
 
-* Execution (all models, projecting on b/1, no optimization):
-```bash
-$ clingo multiclingo.py diverse.lp -c models=0 -c project=1 -c minimize=0 --heuristic=Domain
-clingo version 5.3.0
-Reading from multiclingo.py ...
-Solving...
-Call: 1
-Answer: 1
-a(1) a(2)
-Solving...
-Call: 2
-Answer: 1
-a(3) a(4) b(1)
-Solving...
-UNSATISFIAB:!LE
+The `number` and the `options` are passed to `clingo`, 
+`guess_files` define `G`, and the `check_files` define `C`. 
 
-Models       : 2
-Calls        : 3
-Time         : 0.015s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
-CPU Time     : 0.016s
+Predicate `holds/1` should not appear in any head of `C`.
+
+The script requires `clingo` Python library. It has been tested with `clingo` version `5.3.0`.
+
+## Examples:
+
+* Program `guess.lp`:
+```bash
 
 ```
 
-* Execution (2 models, no projection, optimization):
+* Execution:
 ```bash
-$ clingo multiclingo.py diverse.lp -c models=2 -c project=0 -c minimize=1 --heuristic=Domain
-clingo version 5.3.0
-Reading from multiclingo.py ...
-Solving...
-Call: 1
-Answer: 1
-a(1) a(2)
-Optimization: 0 2
-Solving...
-Call: 2
-Answer: 1
-a(3) a(4)
-Optimization: 0 2
-OPTIMUM FOUND
-
-Models       : 2
-  Optimum    : yes
-Optimization : 0 2
-Calls        : 2
-Time         : 0.016s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
-CPU Time     : 0.016s
-
+$ src/gc.py examples/guess
 ```

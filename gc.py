@@ -41,7 +41,7 @@ import re
 STATE_G = 0
 STATE_C = 1
 HELP = """\
-usage: gc.py [--binary] [number] [options] [guess_files] -C [check_files]
+usage: gc.py [--binary] [--check-to-sat] [number] [options] [guess_files] -C [check_files]
 """
 ANSWER = """\
 Answer {}:
@@ -88,12 +88,15 @@ def parse_args():
     options, guess, check = [], [], []
     state = STATE_G
     binary = False
+    toSat = False
     for i in sys.argv[1:]:
         if i == "--help":
             print(HELP)
             sys.exit(0)
         if i == "--binary":
             binary = True
+        elif i == "--check-to-sat":
+            toSat = True
         elif i == "-C":
             state = STATE_C
         elif i.startswith("-") or i.isdigit():
@@ -102,7 +105,7 @@ def parse_args():
             guess.append(i)
         else:
             check.append(i)
-    return options, binary, guess, check
+    return options, binary, toSat, guess, check
 
 
 def observe(program):
@@ -125,7 +128,7 @@ def get_prefix(control):
 def run():
 
     # start
-    options, binary, guess_files, check_files = parse_args()
+    options, binary, toSat, guess_files, check_files = parse_args()
     control = clingo.Control(options)
 
     # load guess and ground
@@ -152,6 +155,9 @@ def run():
     # reify check
     if binary:
         check_reified  = reify.reify_from_string(check, prefix)
+        check_reified += BINDING_BINARY.replace("##", prefix)
+    elif toSat:
+        check_reified  = reify.reify_from_string_through_sat(check, prefix)
         check_reified += BINDING_BINARY.replace("##", prefix)
     else:
         observer = observe(check)

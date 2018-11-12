@@ -21,17 +21,24 @@ It uses the meta-programming techniques introduced in:
 
 ```
 $ src/gc.py --help
-usage: gc.py [--binary] [number] [options] [guess_files] -C [check_files]
+usage: gc.py [--binary] [--check-to-sat] [number] [options] [guess_files] -C [check_files]
 ```
 
-* Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program. 
-  By default, the reification is performed using the Python API of clingo.
+* Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program.
+* Option `--check-to-sat` translates the check program to a SAT problem and then reifies it into ASP facts.
+  It uses a clingo binary, and programs
+  [lp2normal2](http://research.ics.aalto.fi/software/asp/lp2normal/) and
+  [lp2sat](http://research.ics.aalto.fi/software/asp/lp2sat/), 
+  developed by Tomi Janhunen and his group.
+  They all should be installed in the system.
+* If none of those options is issued, the reification is performed using the Python API of clingo.
 * The `number` and the `options` are passed to `clingo`, 
 `guess_files` define `G`, and the `check_files` define `C`. 
 
 Predicate `holds/1` should not appear in any head of `C`.
 
-The script requires `clingo` Python library. It has been tested with `clingo` version `5.3.0`.
+The script requires `clingo` Python library. 
+It has been tested with `clingo` version `5.3.0`, `lp2normal2` version `2.18`, and `lp2sat` version `1.9`.
 
 ## Examples:
 
@@ -49,7 +56,7 @@ holds(a(X)) :- a(X).
 $ cat examples/basic/unsat.lp
 :-.
 
-$ gc.py examples/basic/{a.lp,holds.lp} -C examples/basic/{a.lp,unsat.lp} 0
+$ gc.py examples/basic/{a.lp,holds.lp} -C examples/basic/unsat.lp 0
 Answer 1:
 a(3)
 Answer 2:

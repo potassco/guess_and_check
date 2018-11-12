@@ -262,7 +262,7 @@ def reify_from_observer(observer, prefix=""):
 def run_command(command):
     output = subprocess.check_output(command)
     if isinstance(output, bytes):
-        output = output.decode()
+        return output.decode()
     return output
 
 def check_clingo_version():
@@ -278,13 +278,13 @@ def check_clingo_version():
 
 def reify_from_string(program, prefix):
     check_clingo_version()
-    with tempfile.NamedTemporaryFile() as file_in:
+    with tempfile.NamedTemporaryFile(delete=False) as file_in:
         # write program to file_in
         file_in.write(program.encode())
         file_in.flush()
-        # run command
-        command = [CLINGO, REIFY_OUTPUT, file_in.name]
-        output = run_command(command)
+    # run command
+    command = [CLINGO, REIFY_OUTPUT, file_in.name]
+    output = run_command(command)
     # add prefix and return
     output = re.sub(r'^(\w+)', r'' + prefix + r'\1', output, flags=re.M)
     return output
@@ -308,20 +308,20 @@ def reify_from_string_through_sat(program, prefix):
 
     # translate to dimacs
     check_clingo_version()
-    with tempfile.NamedTemporaryFile() as file_in:
-        # write program to file_in
+    # write program to file_in
+    with tempfile.NamedTemporaryFile(delete=False) as file_in:
         file_in.write(program.encode())
         file_in.flush()
-        # run commands
-        ps1 = subprocess.Popen(
-            [CLINGO, SMODELS_OUTPUT, file_in.name], stdout=subprocess.PIPE
-        )
-        ps2 = subprocess.Popen(
-            [LP2NORMAL], stdin=ps1.stdout, stdout=subprocess.PIPE
-        )
-        dimacs = subprocess.check_output([LP2SAT], stdin=ps2.stdout)
-        if isinstance(dimacs, bytes):
-             dimacs = dimacs.decode()
+    # run commands
+    ps1 = subprocess.Popen(
+        [CLINGO, SMODELS_OUTPUT, file_in.name], stdout=subprocess.PIPE
+    )
+    ps2 = subprocess.Popen(
+        [LP2NORMAL], stdin=ps1.stdout, stdout=subprocess.PIPE
+    )
+    dimacs = subprocess.check_output([LP2SAT], stdin=ps2.stdout)
+    if isinstance(dimacs, bytes):
+        dimacs = dimacs.decode()
 
     # generate output
     output = ""

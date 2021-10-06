@@ -27,7 +27,8 @@ usage: gc.py [--binary] [--check-to-sat] [number] [options] [guess_files] -C [ch
 * Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program.
 * Option `--check-to-sat` translates the check program to a SAT problem and then reifies it into ASP facts.
   It uses a clingo binary, and programs
-  [lp2normal2](http://research.ics.aalto.fi/software/asp/lp2normal/) and
+  [lp2normal2](http://research.ics.aalto.fi/software/asp/lp2normal/),
+  [lp2acyc](http://research.ics.aalto.fi/software/asp/lp2acyc/), and
   [lp2sat](http://research.ics.aalto.fi/software/asp/lp2sat/), 
   developed by Tomi Janhunen and his group.
   They all should be installed in the system.
@@ -38,7 +39,7 @@ usage: gc.py [--binary] [--check-to-sat] [number] [options] [guess_files] -C [ch
 Predicate `holds/1` should not appear in any head of `C`.
 
 The script requires `clingo` Python library. 
-It has been tested with `clingo` version `5.3.0`, `lp2normal2` version `2.18`, and `lp2sat` version `1.9`.
+It has been tested with `clingo` version `5.3.0`, `lp2normal2` version `2.18`, `lp2acyc` version `1.29`, and `lp2sat` version `1.9`.
 
 ## Examples:
 

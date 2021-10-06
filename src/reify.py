@@ -34,6 +34,7 @@ REIFY_OUTPUT = "--output=reify"
 SMODELS_OUTPUT = "--output=smodels"
 LP2NORMAL = "lp2normal2"
 LP2SAT = "lp2sat"
+LP2ACYC = "lp2acyc"
 VERSION = "--version"
 NO_CLINGO = "clingo binary version not found (when running 'clingo --version')"
 OLD_CLINGO = """clingo binary too old (when running 'clingo --version')\
@@ -42,6 +43,7 @@ OLD_CLINGO = """clingo binary too old (when running 'clingo --version')\
 # options for translations to SAT
 LP2NORMAL_OPTIONS = []
 LP2SAT_OPTIONS = []
+LP2ACYC_OPTIONS = []
 
 #
 # classes Node and Graph used by reify_from_observer()
@@ -296,7 +298,7 @@ def reify_from_string(program, prefix):
 #
 # reify_from_string_through_sat()
 #
-# * uses a clingo binary, lp2normal2 and lp2sat
+# * uses a clingo binary, lp2normal2, lp2acyc, and lp2sat
 #
 
 CHOICE_FACTS = """\
@@ -323,8 +325,12 @@ def reify_from_string_through_sat(program, prefix):
         [LP2NORMAL] + LP2NORMAL_OPTIONS,
         stdin=ps1.stdout, stdout=subprocess.PIPE
     )
+    ps3 = subprocess.Popen(
+        [LP2ACYC] + LP2ACYC_OPTIONS,
+        stdin=ps2.stdout, stdout=subprocess.PIPE
+    )
     dimacs = subprocess.check_output(
-        [LP2SAT] + LP2SAT_OPTIONS, stdin=ps2.stdout
+        [LP2SAT] + LP2SAT_OPTIONS, stdin=ps3.stdout
     )
     if isinstance(dimacs, bytes):
         dimacs = dimacs.decode()

@@ -286,7 +286,7 @@ def reify_from_string(program, prefix):
         file_in.write(program.encode())
         file_in.flush()
     # run command
-    command = [CLINGO, REIFY_OUTPUT, file_in.name]
+    command = [CLINGO, REIFY_OUTPUT, "--pre", file_in.name]
     output = run_command(command)
     # add prefix and return
     output = re.sub(r'^(\w+)', r'' + prefix + r'\1', output, flags=re.M)

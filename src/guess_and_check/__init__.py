@@ -1,38 +1,12 @@
-#!/usr/bin/python
-# MIT License
-#
-# Copyright (c) 2017 Javier Romero
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-# -*- coding: utf-8 -*-
-
-
 #
 # IMPORTS
 #
 
 import clingo
-import src.metasp_programs as metasp_programs
-import src.reify as reify
+import guess_and_check.metasp_programs as metasp_programs
+import guess_and_check.reify as reify
 import sys
 import re
-
 
 #
 # DEFINES
@@ -41,7 +15,7 @@ import re
 STATE_G = 0
 STATE_C = 1
 HELP = """\
-usage: gc.py [--binary] [--check-to-sat] [number] [options] [guess_files] -C [check_files]
+usage: guess-and-check [--binary] [--check-to-sat] [number] [options] [guess_files] -C [check_files]
 """
 ANSWER = """\
 Answer {}:
@@ -63,13 +37,14 @@ BINDING_BINARY = """
 # METHODS
 #
 
+
 class Observer:
 
     def __init__(self):
-        self.rules         = []
-        self.weight_rules  = []
-        self.output_atoms  = []
-        self.output_terms  = []
+        self.rules = []
+        self.weight_rules = []
+        self.output_atoms = []
+        self.output_terms = []
 
     def rule(self, choice, head, body):
         self.rules.append((choice, head, body))
@@ -121,14 +96,16 @@ def get_prefix(control):
     prefix = "_"
     for name, _, _ in control.symbolic_atoms.signatures:
         if name.startswith(prefix):
-            prefix = re.sub(r'(_+).*', r'\1', name) + "_"
+            prefix = re.sub(r"(_+).*", r"\1", name) + "_"
     return prefix
 
 
-def run():
-
-    # start
-    options, binary, toSat, guess_files, check_files = parse_args()
+def solve_guess_and_check(
+    options, binary, toSat, guess_files, check_files, on_model=None
+) -> bool:
+    """
+    Solve a guess and check program and return whether it is satisfiable.
+    """
     control = clingo.Control(options)
 
     # load guess and ground
@@ -137,16 +114,19 @@ def run():
     control.ground([("base", [])])
 
     # get choices
-    choices = "{ " + "; ".join(
-        str(atom.symbol) for atom in
-        control.symbolic_atoms.by_signature(HOLDS, 1)
-    ) + " }."
+    choices = (
+        "{ "
+        + "; ".join(
+            str(atom.symbol) for atom in control.symbolic_atoms.by_signature(HOLDS, 1)
+        )
+        + " }."
+    )
     choices = "" if choices == "{  }." else choices
 
     # create check
     check = choices + "\n#show holds/1.\n"
     for _file in check_files:
-        with open(_file, 'r') as f:
+        with open(_file, "r") as f:
             check += f.read() + "\n"
 
     # fix prefix
@@ -154,14 +134,14 @@ def run():
 
     # reify check
     if binary:
-        check_reified  = reify.reify_from_string(check, prefix)
+        check_reified = reify.reify_from_string(check, prefix)
         check_reified += BINDING_BINARY.replace("##", prefix)
     elif toSat:
-        check_reified  = reify.reify_from_string_through_sat(check, prefix)
+        check_reified = reify.reify_from_string_through_sat(check, prefix)
         check_reified += BINDING_BINARY.replace("##", prefix)
     else:
         observer = observe(check)
-        check_reified  = reify.reify_from_observer(observer, prefix)
+        check_reified = reify.reify_from_observer(observer, prefix)
         check_reified += BINDING_PYTHON.replace("##", prefix)
     # add meta encoding
     check_reified += metasp_programs.metaD_program.replace("##", prefix)
@@ -172,14 +152,13 @@ def run():
 
     # solve
     models = 0
-    with control.solve(yield_=True) as handle:
+    with control.solve(yield_=True, on_model=on_model) as handle:
         for m in handle:
             models += 1
-            model = " ".join([str(x) for x in m.symbols(shown=True)])
-            print(ANSWER.format(models, model))
-        print(handle.get())
+            if not on_model:
+                model = " ".join([str(x) for x in m.symbols(shown=True)])
+                print(ANSWER.format(models, model))
+        if not on_model:
+            print(handle.get())
 
-
-if __name__ == "__main__":
-    run()
-
+    return models > 0

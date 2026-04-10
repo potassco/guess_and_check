@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guess-and-check"
+authors = [{ name = "Javier Romero", email = "javier@cs.uni-potsdam.de" }]
+description = "An implementation of Guess and Check Answer Set Programming in clingo."
+requires-python = ">=3.9"
+dependencies = [ "clingo>=5.3.0" ]
+license = { file = "LICENSE" }
+dynamic = ["version"]
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/potassco/guess_and_check.git"
+
+[project.scripts]
+guess-and-check = "guess_and_check.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

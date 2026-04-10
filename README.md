@@ -16,12 +16,17 @@ that is solved by clingo.
 It uses the meta-programming techniques introduced in:
 *	Martin Gebser, Roland Kaminski, Torsten Schaub: Complex optimization in answer set programming. TPLP 11(4-5): 821-839 (2011).
 
+## Installation
+
+```
+pip install .
+```
 
 ## Usage
 
 ```
-$ src/gc.py --help
-usage: gc.py [--binary] [--check-to-sat] [number] [options] [guess_files] -C [check_files]
+guess-and-check --help
+usage: guess-and-check [--binary] [--check-to-sat] [number] [options] [guess_files] -C [check_files]
 ```
 
 * Option `--binary` uses a clingo binary (which sould be installed in the system) for reifying the check program.
@@ -57,7 +62,7 @@ holds(a(X)) :- a(X).
 $ cat examples/basic/unsat.lp
 :-.
 
-$ gc.py examples/basic/{a.lp,holds.lp} -C examples/basic/unsat.lp 0
+$ guess-and-check examples/basic/{a.lp,holds.lp} -C examples/basic/unsat.lp 0
 Answer 1:
 a(3)
 Answer 2:
@@ -103,7 +108,7 @@ better :- a(X) :    holds(a(X));
           a(Y), not holds(a(Y)).
 :- not better.
 
-$ gc.py examples/preferences/{a.lp,holds.lp} -C examples/preferences/{a.lp,subset.lp} 0
+$ guess-and-check examples/preferences/{a.lp,holds.lp} -C examples/preferences/{a.lp,subset.lp} 0
 Answer 1:
 a(1)
 Answer 2:
@@ -112,7 +117,7 @@ Answer 3:
 a(3)
 SAT
 
-$ gc.py examples/preferences/{a.lp,holds.lp} -C examples/preferences/{a.lp,superset.lp} 0
+$ guess-and-check examples/preferences/{a.lp,holds.lp} -C examples/preferences/{a.lp,superset.lp} 0
 Answer 1:
 a(1) a(2) a(3)
 SAT
@@ -149,7 +154,7 @@ win :- x(I,n+1-I) : I=1..n.
 %%% o cells are blocked
 :- holds(o(I,J)), x(I,J).
 
-$ gc.py examples/tictactoe/{playero.lp,holds.lp} -C examples/tictactoe/playerx.lp 0
+$ guess-and-check examples/tictactoe/{playero.lp,holds.lp} -C examples/tictactoe/playerx.lp 0
 Answer 1:
 o(1,3) o(2,2) o(3,1)
 Answer 2:
@@ -202,7 +207,7 @@ occurs(A,T) :- holds(occurs(A,T)).
 %%% the plan has to fail
 :- not fail.
 
-$ gc.py examples/conformant/{example2.lp,example2_guess.lp,holds.lp} -C examples/conformant/{example2.lp,example2_check.lp} --binary
+$ guess-and-check examples/conformant/{example2.lp,example2_guess.lp,holds.lp} -C examples/conformant/{example2.lp,example2_check.lp} --binary
 Answer 1:
 occurs(cpa_go_down(cpa_e0,cpa_f1,cpa_f0),1) occurs(cpa_step_in(cpa_e0,cpa_f0,cpa_p0),2) occurs(cpa_go_up(cpa_e0,cpa_f0,cpa_f1),3) occurs(cpa_step_out(cpa_e0,cpa_f1,cpa_p0),4) occurs(cpa_collect(cpa_c0,cpa_f1,cpa_p0),5) occurs(cpa_collect(cpa_c1,cpa_f1,cpa_p0),6) occurs(cpa_move_right(cpa_f1,cpa_p0,cpa_p1),7) occurs(cpa_collect(cpa_c0,cpa_f1,cpa_p1),8) occurs(cpa_collect(cpa_c1,cpa_f1,cpa_p1),9)
 SAT
